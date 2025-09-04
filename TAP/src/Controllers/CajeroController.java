@@ -1,6 +1,7 @@
 package Controllers;
 
 import Model.CajeroModel;
+import Utils.Contenedor;
 import Views.CajeroView;
 
 /**
@@ -55,6 +56,19 @@ public class CajeroController {
         String numeroCuenta = view.solicitarNumCuenta();
         String pin = view.solicitarPin();
         return model.autenticar(numeroCuenta, pin);
+    }
+
+    /**
+     * Obtiene el nombre del titular haciendo uso de la clase generica
+     * @return nombre del titular como un String
+     */
+    public String obtenerTitular(){
+        Contenedor<String> titular = new Contenedor<>(model.getCuentaActual().getTitular());
+        return titular.toString();
+    }
+
+    public void mostrarBienvenida(){
+        view.mostrarBienvenida();
     }
 
     /**
@@ -129,7 +143,7 @@ public class CajeroController {
     private void ejecutarMenuPrincipal(){
         boolean sessionActiva = true;
         while(sessionActiva){
-            view.mostrarMenuPrincipal(model.getCuentaActual().getTitular());
+            view.mostrarMenuPrincipal(obtenerTitular());
             int opcion = view.leerOpcion();
             switch(opcion){
                 case 1:
