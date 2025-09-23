@@ -1,7 +1,9 @@
 package Controllers;
 
+import Model.CajeroContext;
 import Model.CajeroModel;
-import Utils.Contenedor;
+import Model.Cuenta;
+import Utils.*;
 import Views.CajeroView;
 
 /**
@@ -20,6 +22,7 @@ import Views.CajeroView;
 public class CajeroController {
     private CajeroModel model;
     private CajeroView view;
+    private CajeroContext cajero;
     private boolean sistemaActivo;
 
     /**
@@ -30,6 +33,7 @@ public class CajeroController {
     public CajeroController(CajeroModel model, CajeroView view) {
         this.model = model;
         this.view = view;
+        this.cajero = new CajeroContext();
         this.sistemaActivo = true;
     }
 
@@ -75,52 +79,32 @@ public class CajeroController {
      * Muetsra el saldo de la cuenta en sesion
      */
     public void consultarSaldo(){
-        double saldo = model.consultarSaldo();
-        view.mostrarSaldo(saldo);
+        cajero.setStrategy(new ConsultarSaldoStrategy());
+        cajero.ejecutarOperacion(model, view);
     }
 
     /**
      * Retiro de fondos de la cuenta, si es que hay fondos suficientes
      */
     public void retirarSaldo(){
-        double cantidad = view.solicitarCantidad("Retirar");
-        if(cantidad <= 0){
-            view.mostrarMensaje("Error en la cantidad de saldo");
-            return;
-        }
-        if(model.realizarRetiro(cantidad)){
-            view.mostrarMensaje("Retiro exitoso de " + cantidad);
-        }else{
-            view.mostrarMensaje("Saldo insuficiente");
-        }
+        cajero.setStrategy(new RetirarStrategy());
+        cajero.ejecutarOperacion(model, view);
     }
 
     /**
      * Depositar fondos a la cuenta
      */
     public void depositarSaldo(){
-        double cantidad = view.solicitarCantidad("Depositar");
-        if(cantidad <= 0){
-            view.mostrarMensaje("Error en la cantidad de saldo");
-            return;
-        }
-        if(model.realizarDeposito(cantidad)){
-            view.mostrarMensaje("Deposito exitoso de " + cantidad);
-            view.mostrarMensaje("Su saldo es de " + model.getCuentaActual().getSaldo());
-        }
+        cajero.setStrategy(new DepositarStrategy());
+        cajero.ejecutarOperacion(model, view);
     }
 
     /**
      * Realizar una transferencia a otra cuenta
      */
     public void realizarTransferencia(){
-        String destino = view.solicitarDestinatario();
-        double monto = view.solicitarCantidad("Transferir");
-        if(model.realizarTransferencia(destino, monto)){
-            view.mostrarMensaje("Transferencia exitosa por " + monto);
-        }else{
-            view.mostrarMensaje("No se pudo realizar la transferencia");
-        }
+        cajero.setStrategy(new TransferirStrategy());
+        cajero.ejecutarOperacion(model, view);
     }
 
     /**

@@ -53,8 +53,11 @@ public class Cuenta {
         return titular;
     }
 
-    // Reglas del negocio
+    public void setSaldo(double saldo) {
+        this.saldo = saldo;
+    }
 
+    // Reglas del negocio
     /**
      *Valida que el pin sea correcto dentro de las cuentas existentes
      *

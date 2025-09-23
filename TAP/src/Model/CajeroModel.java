@@ -1,5 +1,7 @@
 package Model;
 
+import Utils.CuentaBuilder;
+import Utils.OperacionStrategy;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,9 +26,26 @@ public class CajeroModel {
      * Inicializa un conjunto de cuentas practicas.
      */
     private void inicializarCuentas() {
-        cuentas.put("12345", new Cuenta("12345","1111", 5000,"Juan Pérez"));
-        cuentas.put("67890", new Cuenta("67890","2222", 37892.21,"Roberto Garnica"));
-        cuentas.put("121221", new Cuenta("121221","3333", 100000,"Julian Quiñones"));
+        cuentas.put("12345", new CuentaBuilder()
+                .setNumCuenta("12345")
+                .setPin("1111")
+                .setSaldo(5000)
+                .setTitular("Juan Pérez")
+                .build());
+
+        cuentas.put("67890", new CuentaBuilder()
+                .setNumCuenta("67890")
+                .setPin("2222")
+                .setSaldo(37892.21)
+                .setTitular("Roberto Garnica")
+                .build());
+
+        cuentas.put("121221", new CuentaBuilder()
+                .setNumCuenta("121221")
+                .setPin("3333")
+                .setSaldo(100000)
+                .setTitular("Julian Quiñones")
+                .build());
     }
 
     /**
